@@ -25,8 +25,10 @@ def trvalues(p, x):
     return [y, dydx, d2ydx2, alpha, R]
 
 
-data = pd.read_csv('data_tabs.txt', delimiter='\t', skiprows=1)
+data = pd.read_csv('M1Data.txt', delimiter='\t', skiprows=1)
 data = data.sort_values('t')
+
+print(data)
 
 # Constants
 m = 0.0027  # Mass of ball
@@ -78,6 +80,7 @@ x = []
 y = []
 
 for i in range(num_points):
+    if (x_now > 1.21): break
     alpha = trvalues(coefficients, x_now)[3]
     s_next = s_now + v_now*h # h is the time derivative
     v_next = v_now + ((g*np.sin(alpha))/(1 + c))*h
@@ -92,6 +95,7 @@ for i in range(num_points):
     s_now = s_next
     v_now = v_next
 
+y_interpolant = trvalues(coefficients, data['x'])[0]
 
 plt.subplot(221)
 plt.plot(x, s, label='S(x)')
@@ -100,10 +104,13 @@ plt.subplot(222)
 plt.plot(x, v, label='v(x)')
 plt.legend()
 plt.subplot(223)
-plt.plot(x, y)
+plt.plot(x, y, label='y(x)')
 plt.plot()
 
+plt.plot(data['x'].iloc[0:201], data['y'], label='raw_data')
+
+
+#plt.plot(data['x'].iloc[0:201], y_interpolant, label='Y_interpolant')
+plt.legend()
+
 plt.show()
-
-
-print(v[:100])
