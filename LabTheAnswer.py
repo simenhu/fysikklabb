@@ -78,39 +78,53 @@ s = []
 v = []
 x = []
 y = []
-
+a = []
+alpha_list = []
 for i in range(num_points):
     if (x_now > 1.21): break
     alpha = trvalues(coefficients, x_now)[3]
     s_next = s_now + v_now*h # h is the time derivative
-    v_next = v_now + ((g*np.sin(alpha))/(1 + c))*h
+    a_next = ((g*np.sin(alpha))/(1 + c))
+    v_next = v_now + a_next*h
     x_next = x_now + (s_next - s_now)*np.cos(alpha)
     y_next = y_now - (s_next - s_now)*np.sin(alpha)
+
+    alpha_list.append(alpha)
+    a.append(a_next)
     x.append(x_next)
     y.append(y_next)
     s.append(s_next)
     v.append(v_next)
+
     x_now = x_next
     y_now = y_next
     s_now = s_next
     v_now = v_next
 
-y_interpolant = trvalues(coefficients, data['x'])[0]
 
 plt.subplot(221)
 plt.plot(x, s, label='S(x)')
 plt.legend()
+
 plt.subplot(222)
 plt.plot(x, v, label='v(x)')
 plt.legend()
+
 plt.subplot(223)
 plt.plot(x, y, label='y(x)')
+data_cut = data[data['x']<=1.2]
+y_interpolant = trvalues(coefficients, data_cut['x'])[0]
+
+plt.plot(data_cut['x'].iloc[0:201], data_cut['y'], label='raw_data')
+plt.plot(data_cut['x'].iloc[0:201], y_interpolant, label='Y_interpolant')
+plt.legend()
+
+plt.subplot(224)
+f = np.subtract(0.03*(9.82*np.sin(alpha_list)), a)
+plt.plot(x, a, label='a(x)')
+plt.plot(x, f, label='f(x)')
+plt.legend()
 plt.plot()
 
-plt.plot(data['x'].iloc[0:201], data['y'], label='raw_data')
-
-
-#plt.plot(data['x'].iloc[0:201], y_interpolant, label='Y_interpolant')
-plt.legend()
 
 plt.show()
