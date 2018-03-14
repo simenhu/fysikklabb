@@ -25,9 +25,13 @@ def trvalues(p, x):
     return [y, dydx, d2ydx2, alpha, R]
 
 
-dataFile = "M3Data.txt"
+dataFile = "M2Data.txt"
 data = pd.read_csv('%s' % dataFile, delimiter='\t', skiprows=1)
 data = data.sort_values('t')
+
+dataFile2 = "M3Velocity.txt"
+data2 = pd.read_csv('%s' % dataFile, delimiter='\t', skiprows=1)
+data2 = data2.sort_values('t')
 
 # Constants
 m = 0.0027  # Mass of ball
@@ -35,7 +39,7 @@ g = 9.82  # Constant of gravitation
 c = 2 / 3
 start_x = 0.0  # The start position in x-axis
 end_x = 2.0  # The end position in x-axis
-num_points = 10000  # Number of points
+num_points = 100000  # Number of points
 h = (data['t'].iloc[-1] - data['t'].iloc[0]) / num_points  # Stepsize
 
 # Find the coefficients of a polynomial of degree 15 from the (t, x, y) values.
@@ -83,39 +87,88 @@ for i in range(num_points):
 
 plt.style.use("bmh")
 
-plt.subplot(231)
-plt.plot(time, position)
-plt.ylabel("posisjon x [m/s]")
-plt.xlabel("tid t [s]")
-plt.title("Numerisk posisjon/tid")
 
 
-plt.subplot(232)
-plt.plot(time, velocity)
-plt.ylabel("hastighet v [m/s]")
-plt.xlabel("tid t [s]")
-plt.title("Numerisk hastighet/tid")
+def plotXandYExperimental():
+    plt.subplot(211)
+    plt.plot(data['t'], data['x'], label="Eksperimentell")
 
-plt.subplot(233)
-plt.plot(time, acceleration)
-plt.ylabel("akselerasjon a [m/s^2]")
-plt.xlabel("tid t [s]")
-plt.title("Numerisk akselerasjon/tid")
+    plt.legend()
+def plotNumericalPosition():
+    global gca
+    plt.plot(time, position, label="Numerisk")
+    plt.ylabel("posisjon x [m/s]")
+    plt.xlabel("tid t [s]")
+    plt.legend()
+    gca = plt.gca()
+    gca.set_xlim([0, 1.5])
+
+def plotNumericalAcceleration():
+    global gca
+    plt.subplot(211)
+    plt.plot(time, acceleration, label ="Numerisk")
+    plt.ylabel("akselerasjon a [m/s^2]")
+    plt.legend()
+    plt.xlabel("tid t [s]")
+    gca = plt.gca()
+    gca.set_xlim([0, 1.5])
 
 
-#plt.subplot(234)
-#plt.plot(position, n)
-#plt.ylabel("normalkraft N [mN]")
-#plt.xlabel("posisjon x [m]")
-#plt.title("Numerisk pos")
-#plt.legend()
+def plotFandN():
+    global gca
+    plt.subplot(211)
+    plt.plot(position, n)
+    plt.ylabel("normalkraft N [mN]")
+    plt.xlabel("posisjon x [m]")
 
-plt.subplot(234)
-f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
-plt.plot(time, f)
-plt.ylabel("friksjonskraft f [N]")
-plt.xlabel("tid t [s]")
-plt.title("Numerisk friksjonskraft/tid")
+    gca = plt.gca()
+    gca.set_xlim([0, 1.371])
+
+    plt.subplot(212)
+    f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
+    plt.plot(position, f)
+
+    plt.ylabel("friksjonskraft f [mN]")
+    plt.xlabel("posisjon x [m]")
+    gca = plt.gca()
+    gca.set_xlim([0, 1.371])
+
+
+def plotExperimentalVelocity():
+    global gca
+    plt.subplot(212)
+
+    # Data2['x'] is actually Data2['v']
+    plt.plot(data2['t'], data2['x'], label="Eksperimentell")
+    plt.ylabel("Hastighet v [m/s]")
+    plt.legend()
+    plt.xlabel("tid t [s]")
+
+def plotNumericalVelocity():
+    global gca
+    plt.subplot(212)
+    plt.plot(time, velocity, label="Numerisk")
+    plt.legend()
+    plt.ylabel("hastighet v [m/s]")
+    plt.xlabel("tid t [s]")
+    gca = plt.gca()
+
+    gca.set_xlim([0, 1.5])
+
+plotNumericalAcceleration()
+
+
+def plotF():
+
+    plt.subplot(211)
+    f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
+    plt.plot(position, f, label="Numerisk")
+    plt.legend()
+    plt.ylabel("friksjonskraft f [mN]")
+    plt.xlabel("posisjon x [m]")
+    gca = plt.gca()
+    gca.set_xlim([0, 1.371])
+
 
 
 plt.show()
