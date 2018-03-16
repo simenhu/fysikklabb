@@ -55,33 +55,37 @@ position_now = 0
 velocity_now = 0
 time_now = 0
 y_now = data['y'].iloc[0]
+x_now = data['x'].iloc[0] # Simen: Startposisjonen i x retning
 position = []  # List of positions traveled in x direction
 velocity = []  # List of velocity values
 time = []  # List of x values
 y = []  # List of y(x) values
+x = [] # List of x values
 acceleration = []  # List of accelerations
 alpha_list = []  # List of alpha values (angles)
 n = []  # List of normal force values
 
+print(data)
+
 for i in range(num_points):
-    alpha = trvalues(coefficients, time_now)[3]
+    alpha = trvalues(coefficients, x_now)[3] # Burde være x_now ikke time_now
     position_next = position_now + velocity_now * h  # h is the time derivative
-    acceleration_next = ((g * np.sin(alpha)) / (1 + c))
+    acceleration_next = ((g * np.sin(alpha)) / (1 + c)) # Burde kalles acceleration now
     velocity_next = velocity_now + acceleration_next * h
     time_next = time_now + h
-    y_next = y_now - (position_next - position_now) * np.sin(alpha)
+    y_now = y_now - (position_next - position_now) * np.sin(alpha) # The next y value to use
+    x_now = x_now + (position_next - position_now)*np.cos(alpha) # The next x value to use
 
     # Add calculated values to lists
     n.append(np.cos(alpha) * m * g)
     alpha_list.append(alpha)
     acceleration.append(acceleration_next)
     time.append(time_next)
-    y.append(y_next)
+    y.append(y_now)
     position.append(position_next)
     velocity.append(velocity_next)
 
     time_now = time_next
-    y_now = y_next
     position_now = position_next
     velocity_now = velocity_next
 
@@ -155,7 +159,6 @@ def plotNumericalVelocity():
 
     gca.set_xlim([0, 1.5])
 
-plotNumericalAcceleration()
 
 
 def plotF():
@@ -170,5 +173,6 @@ def plotF():
     gca.set_xlim([0, 1.371])
 
 
+plotNumericalAcceleration()
 
 plt.show()
