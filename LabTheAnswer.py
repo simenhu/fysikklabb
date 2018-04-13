@@ -3,13 +3,13 @@ import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
 
-SMALL_SIZE = 20
+SMALL_SIZE = 9
 MEDIUM_SIZE = 10
 BIGGER_SIZE = 12
 
 plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
-plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
-plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
 plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
@@ -145,6 +145,8 @@ def plotFandN():
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
     gca.set_ylim([0.019, 0.027])
+    plt.axvline(x=0.48, color='r', linestyle='dashed')
+    plt.axvline(x=1.016, color='r',linestyle='dashed')
 
     # This plots the friction force dependent on x
     ax2 = plt.subplot(312, sharex=ax1)
@@ -153,12 +155,17 @@ def plotFandN():
     plt.ylabel("friksjonskraft f [mN]")
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
-    gca.set_xlim([0, 1.371])
+    plt.axvline(x=0.48, color='r', linestyle='dashed')
+    plt.axvline(x=1.016, color='r', linestyle='dashed')
 
     ax3 = plt.subplot(313, sharex = ax1)
     plt.plot(x, y)
-    plt.ylabel("y(x)")
-    plt.xlabel("x")
+    plt.ylabel("posisjon y(x) [m]")
+    plt.xlabel("posisjon x [m]")
+    gca = plt.gca()
+    gca.set_ylim([0.45, 0.65])
+    plt.axvline(x=0.48, color='r', linestyle='dashed')
+    plt.axvline(x=1.016, color='r', linestyle='dashed')
 
 
 
