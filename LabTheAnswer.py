@@ -51,7 +51,7 @@ c = 2 / 3
 start_x = 0.0  # The start position in x-axis
 end_x = 2.0  # The end position in x-axis
 num_points = 1000  # Number of points
-h = (data['t'].iloc[-1] - data['t'].iloc[0]) / num_points  # Time step size
+h = data['t'].iloc[-1] / num_points  # Time step size
 
 # Find the coefficients of a polynomial of degree 15 from the (t, x, y) values.
 coefficients = iptrack(dataFile)
@@ -63,13 +63,15 @@ gca.xaxis.set_major_locator(matplotlib.ticker.MultipleLocator(0.05))
 
 # This is a implemented eulers method
 position_now = 0
-velocity_now = 0
+velocity_now = 0 # Position the traveled direction
 time_now = 0
 y_now = data['y'].iloc[0]
-position = []  # List of positions traveled in x direction
-velocity = []  # List of velocity values
-time = []  # List of x values
-y = []  # List of y(x) values
+x_now = data['x'].iloc[0]
+position = [] # List of positions traveled in the track
+velocity = [] # List of velocity values
+time = np.linspace(0, data['t'].iloc[0], num_points)  # list of time samples to use when plotting by time
+y = [] # List of y(x) values
+x = [] # LIst of x values
 acceleration = []  # List of accelerations
 alpha_list = []  # List of alpha values (angles)
 n = []  # List of normal force values
@@ -81,18 +83,21 @@ for i in range(num_points):
     velocity_next = velocity_now + acceleration_next * h
     time_next = time_now + h
     y_next = y_now - (position_next - position_now) * np.sin(alpha)
+    x_next = x_now + (position_next - position_now) * np.cos(alpha)
 
     # Add calculated values to lists
     n.append(np.cos(alpha) * m * g)
     alpha_list.append(alpha)
     acceleration.append(acceleration_next)
-    time.append(time_next)
+    # time.append(time_next)
     y.append(y_next)
+    x.append(x_next)
     position.append(position_next)
     velocity.append(velocity_next)
 
-    time_now = time_next
+    # time_now = time_next
     y_now = y_next
+    x_now = x_next
     position_now = position_next
     velocity_now = velocity_next
 
@@ -131,22 +136,31 @@ def plotNumericalAcceleration():
 
 def plotFandN():
     global gca
-    plt.subplot(211)
-    plt.plot(position, n)
+
+    # This plots the normal force dependent on x
+    ax1 = plt.subplot(311)
+    plt.plot(x, n)
     plt.ylabel("normalkraft N [mN]")
     plt.xlabel("posisjon x [m]")
-
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
+    gca.set_ylim([0.019, 0.027])
 
-    plt.subplot(212)
+    # This plots the friction force dependent on x
+    ax2 = plt.subplot(312, sharex=ax1)
     f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
-    plt.plot(position, f)
-
+    plt.plot(x, f)
     plt.ylabel("friksjonskraft f [mN]")
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
+
+    ax3 = plt.subplot(313, sharex = ax1)
+    plt.plot(x, y)
+    plt.ylabel("y(x)")
+    plt.xlabel("x")
+
+
 
 
 def plotExperimentalVelocity():
