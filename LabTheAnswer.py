@@ -51,7 +51,7 @@ c = 2 / 3
 start_x = 0.0  # The start position in x-axis
 end_x = 2.0  # The end position in x-axis
 num_points = 1000  # Number of points
-h = (data['t'].iloc[-1] - data['t'].iloc[0]) / num_points  # Stepsize
+h = (data['t'].iloc[-1] - data['t'].iloc[0]) / num_points  # Time step size
 
 # Find the coefficients of a polynomial of degree 15 from the (t, x, y) values.
 coefficients = iptrack(dataFile)
@@ -75,7 +75,7 @@ alpha_list = []  # List of alpha values (angles)
 n = []  # List of normal force values
 
 for i in range(num_points):
-    alpha = trvalues(coefficients, time_now)[3]
+    alpha = trvalues(coefficients, position_now)[3]
     position_next = position_now + velocity_now * h  # h is the time derivative
     acceleration_next = ((g * np.sin(alpha)) / (1 + c))
     velocity_next = velocity_now + acceleration_next * h
@@ -207,6 +207,6 @@ def plotInterpolatedCurveWithExperimentalCurve():
 
 print(coefficients)
 
-plotInterpolatedCurveWithExperimentalCurve()
+plotFandN()
 
 plt.show()
