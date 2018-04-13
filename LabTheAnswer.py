@@ -3,6 +3,17 @@ import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
 
+SMALL_SIZE = 20
+MEDIUM_SIZE = 10
+BIGGER_SIZE = 12
+
+plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('axes', titlesize=SMALL_SIZE)     # fontsize of the axes title
+plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 # Input a tab seperated list of (t, x, y) values.
 # Produce coefficients corresponding to a function of degree 15.
@@ -39,7 +50,7 @@ g = 9.82  # Constant of gravitation
 c = 2 / 3
 start_x = 0.0  # The start position in x-axis
 end_x = 2.0  # The end position in x-axis
-num_points = 100000  # Number of points
+num_points = 1000  # Number of points
 h = (data['t'].iloc[-1] - data['t'].iloc[0]) / num_points  # Stepsize
 
 # Find the coefficients of a polynomial of degree 15 from the (t, x, y) values.
@@ -88,25 +99,29 @@ for i in range(num_points):
 plt.style.use("bmh")
 
 
-
-def plotXandYExperimental():
+def plotXandTExperimental():
     plt.subplot(211)
-    plt.plot(data['t'], data['x'], label="Eksperimentell")
+    plt.plot(data['t'], data['y'], label="Eksperimentell")
+    gca.set_ylim([0.4, 0.7])
 
     plt.legend()
+
+
 def plotNumericalPosition():
     global gca
-    plt.plot(time, position, label="Numerisk")
+    plt.plot(time, y, label="Numerisk")
     plt.ylabel("posisjon x [m/s]")
     plt.xlabel("tid t [s]")
     plt.legend()
     gca = plt.gca()
     gca.set_xlim([0, 1.5])
+    gca.set_ylim([0.4, 0.7])
+
 
 def plotNumericalAcceleration():
     global gca
     plt.subplot(211)
-    plt.plot(time, acceleration, label ="Numerisk")
+    plt.plot(time, acceleration, label="Numerisk")
     plt.ylabel("akselerasjon a [m/s^2]")
     plt.legend()
     plt.xlabel("tid t [s]")
@@ -144,6 +159,7 @@ def plotExperimentalVelocity():
     plt.legend()
     plt.xlabel("tid t [s]")
 
+
 def plotNumericalVelocity():
     global gca
     plt.subplot(212)
@@ -155,11 +171,8 @@ def plotNumericalVelocity():
 
     gca.set_xlim([0, 1.5])
 
-plotNumericalAcceleration()
-
 
 def plotF():
-
     plt.subplot(211)
     f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
     plt.plot(position, f, label="Numerisk")
@@ -170,5 +183,30 @@ def plotF():
     gca.set_xlim([0, 1.371])
 
 
+def plotInterpolatedCurveWithExperimentalCurve():
+    plt.subplot(211)
+
+    length = len(data['x'])
+    x = np.linspace(0, 1.353721644E0, length)
+
+    y = np.polyval(coefficients, x)
+    plt.plot(x, y, label="Interpolant")
+    plt.plot(data['x'], data['y'], label="Eksperimentell")
+    plt.ylabel("posisjon y [m]")
+    plt.xlabel("posisjon x [m]")
+    plt.legend()
+
+    diff = y - data['y']
+    plt.subplot(212)
+    plt.plot(x, diff, label="Differanse")
+    plt.ylabel("posisjon y [m]")
+    plt.xlabel("posisjon x [m]")
+    plt.legend()
+
+
+
+print(coefficients)
+
+plotInterpolatedCurveWithExperimentalCurve()
 
 plt.show()
