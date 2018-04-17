@@ -4,16 +4,26 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 SMALL_SIZE = 9
-MEDIUM_SIZE = 10
-BIGGER_SIZE = 12
+MEDIUM_SIZE = 20
+BIGGER_SIZE = 20
 
-plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+plt.rc('font', size=BIGGER_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
 plt.rc('axes', labelsize=BIGGER_SIZE)    # fontsize of the x and y labels
-plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
-plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+plt.rc('xtick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
+plt.rc('ytick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
+plt.rc('legend', fontsize=BIGGER_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+left  = 0.08  # the left side of the subplots of the figure
+right = 0.99    # the right side of the subplots of the figure
+bottom = 0.07   # the bottom of the subplots of the figure
+top = 0.97      # the top of the subplots of the figure
+wspace = 0.21   # the amount of width reserved for space between subplots,
+               # expressed as a fraction of the average axis width
+hspace = 0.31   # the amount of height reserved for space between subplots,
+               # expressed as a fraction of the average axis height
+plt.subplots_adjust(left, bottom, right, top,
+                wspace, hspace)
 
 # Input a tab seperated list of (t, x, y) values.
 # Produce coefficients corresponding to a function of degree 15.
@@ -224,9 +234,6 @@ def plotInterpolatedCurveWithExperimentalCurve():
     plt.xlabel("posisjon x [m]")
     plt.legend()
 
-
-
-print(coefficients)
 
 plotFandN()
 
