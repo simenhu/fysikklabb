@@ -4,8 +4,8 @@ from matplotlib import pyplot as plt
 import pandas as pd
 
 SMALL_SIZE = 9
-MEDIUM_SIZE = 20
-BIGGER_SIZE = 20
+MEDIUM_SIZE = 30
+BIGGER_SIZE = 30
 
 plt.rc('font', size=BIGGER_SIZE)          # controls default text sizes
 plt.rc('axes', titlesize=BIGGER_SIZE)     # fontsize of the axes title
@@ -14,9 +14,9 @@ plt.rc('xtick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
 plt.rc('ytick', labelsize=MEDIUM_SIZE)    # fontsize of the tick labels
 plt.rc('legend', fontsize=BIGGER_SIZE)    # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-left  = 0.08  # the left side of the subplots of the figure
-right = 0.99    # the right side of the subplots of the figure
-bottom = 0.07   # the bottom of the subplots of the figure
+left  = 0.09  # the left side of the subplots of the figure
+right = 0.98    # the right side of the subplots of the figure
+bottom = 0.09   # the bottom of the subplots of the figure
 top = 0.97      # the top of the subplots of the figure
 wspace = 0.21   # the amount of width reserved for space between subplots,
                # expressed as a fraction of the average axis width
@@ -136,19 +136,21 @@ def plotNumericalPosition():
 def plotNumericalAcceleration():
     global gca
     plt.subplot(211)
-    plt.plot(time, acceleration, label="Numerisk")
+    plt.plot(x, acceleration, label="Numerisk")
     plt.ylabel("akselerasjon a [m/s^2]")
     plt.legend()
-    plt.xlabel("tid t [s]")
+    plt.xlabel("position x [m]")
     gca = plt.gca()
-    gca.set_xlim([0, 1.5])
+    gca.set_xlim([0,1.371])
+    plt.axvline(x=0.48, color='r', linestyle='dashed')
+    plt.axvline(x=1.016, color='r', linestyle='dashed')
 
 
 def plotFandN():
     global gca
 
     # This plots the normal force dependent on x
-    ax1 = plt.subplot(311)
+    ax1 = plt.subplot(211)
     plt.plot(x, n)
     plt.ylabel("normalkraft N [mN]")
     plt.xlabel("posisjon x [m]")
@@ -159,7 +161,7 @@ def plotFandN():
     plt.axvline(x=1.016, color='r',linestyle='dashed')
 
     # This plots the friction force dependent on x
-    ax2 = plt.subplot(312, sharex=ax1)
+    ax2 = plt.subplot(212, sharex=ax1)
     f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
     plt.plot(x, f)
     plt.ylabel("friksjonskraft f [mN]")
@@ -168,6 +170,7 @@ def plotFandN():
     plt.axvline(x=0.48, color='r', linestyle='dashed')
     plt.axvline(x=1.016, color='r', linestyle='dashed')
 
+"""
     ax3 = plt.subplot(313, sharex = ax1)
     plt.plot(x, y)
     plt.ylabel("posisjon y(x) [m]")
@@ -176,6 +179,7 @@ def plotFandN():
     gca.set_ylim([0.45, 0.65])
     plt.axvline(x=0.48, color='r', linestyle='dashed')
     plt.axvline(x=1.016, color='r', linestyle='dashed')
+"""
 
 
 
@@ -204,14 +208,16 @@ def plotNumericalVelocity():
 
 
 def plotF():
-    plt.subplot(211)
+    plt.subplot(212)
     f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
-    plt.plot(position, f, label="Numerisk")
+    plt.plot(x, f, label="Numerisk")
     plt.legend()
     plt.ylabel("friksjonskraft f [mN]")
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
+    plt.axvline(x=0.48, color='r', linestyle='dashed')
+    plt.axvline(x=1.016, color='r', linestyle='dashed')
 
 
 def plotInterpolatedCurveWithExperimentalCurve():
@@ -235,6 +241,8 @@ def plotInterpolatedCurveWithExperimentalCurve():
     plt.legend()
 
 
-plotFandN()
+plotNumericalAcceleration()
+plotF()
+
 
 plt.show()
