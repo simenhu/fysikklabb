@@ -3,6 +3,7 @@ import matplotlib
 from matplotlib import pyplot as plt
 import pandas as pd
 
+
 SMALL_SIZE = 9
 MEDIUM_SIZE = 30
 BIGGER_SIZE = 30
@@ -14,10 +15,10 @@ plt.rc('xtick', labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
 plt.rc('ytick', labelsize=MEDIUM_SIZE)  # fontsize of the tick labels
 plt.rc('legend', fontsize=BIGGER_SIZE)  # legend fontsize
 plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
-left = 0.09  # the left side of the subplots of the figure
+left = 0.11  # the left side of the subplots of the figure
 right = 0.98  # the right side of the subplots of the figure
 bottom = 0.09  # the bottom of the subplots of the figure
-top = 0.97  # the top of the subplots of the figure
+top = 0.95  # the top of the subplots of the figure
 wspace = 0.21  # the amount of width reserved for space between subplots,
 # expressed as a fraction of the average axis width
 hspace = 0.31  # the amount of height reserved for space between subplots,
@@ -61,7 +62,7 @@ g = 9.82  # Constant of gravitation
 c = 2 / 3
 start_x = 0.0  # The start position in x-axis
 end_x = 2.0  # The end position in x-axis
-num_points = 196  # Number of points
+num_points = 10000  # Number of points
 h = data['t'].iloc[-1] / num_points  # Time step size
 
 # Find the coefficients of a polynomial of degree 15 from the (t, x, y) values.
@@ -128,7 +129,7 @@ def plotNumericalPosition():
     global gca
     plt.subplot(211)
     plt.plot(time, y, label="Numerisk")
-    plt.ylabel("posisjon x [m]")
+    plt.ylabel("posisjon y [m]")
     plt.xlabel("tid t [s]")
     plt.legend()
     gca = plt.gca()
@@ -149,7 +150,7 @@ def plotExperimentalVelocity():
 
 
 def plotNumericalVelocity():
-    plt.subplot(212)
+    plt.subplot(211)
     print(time)
     plt.plot(time, velocity, label="Numerisk")
     plt.ylabel("hastighet v [m/s]")
@@ -162,12 +163,15 @@ def plotNumericalAcceleration():
     plt.subplot(211)
     plt.plot(x, acceleration, label="Numerisk")
     plt.ylabel("akselerasjon a [m/s²]")
-    plt.legend()
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
-    plt.axvline(x=0.48, color='r', linestyle='dashed')
-    plt.axvline(x=1.016, color='r', linestyle='dashed')
+    plt.axvline(x=0.48, color='C9', linestyle='dashed')
+    plt.axvline(x=1.016, color='C9', linestyle='dashed')
+
+    plt.axvline(x=0.513, color="b", linestyle='dashed')
+    plt.axvline(x=1.069, color="b", linestyle='dashed')
+    plt.legend()
 
 
 def plotFandN():
@@ -181,8 +185,11 @@ def plotFandN():
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
     gca.set_ylim([0.019, 0.027])
-    plt.axvline(x=0.48, color='r', linestyle='dashed')
-    plt.axvline(x=1.016, color='r', linestyle='dashed')
+    plt.axvline(x=0.48, color='C9', linestyle='dashed')
+    plt.axvline(x=1.016, color='C9', linestyle='dashed')
+
+    plt.axvline(x=0.513, color="b", linestyle='dashed')
+    plt.axvline(x=1.069, color="b", linestyle='dashed')
 
     # This plots the friction force dependent on x
     ax2 = plt.subplot(212, sharex=ax1)
@@ -191,8 +198,11 @@ def plotFandN():
     plt.ylabel("friksjonskraft f [mN]")
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
-    plt.axvline(x=0.48, color='r', linestyle='dashed')
-    plt.axvline(x=1.016, color='r', linestyle='dashed')
+    plt.axvline(x=0.48, color='C9', linestyle='dashed')
+    plt.axvline(x=1.016, color='C9', linestyle='dashed')
+
+    plt.axvline(x=0.513, color="b", linestyle='dashed')
+    plt.axvline(x=1.069, color="b", linestyle='dashed')
 
 
 """
@@ -211,13 +221,16 @@ def plotF():
     plt.subplot(212)
     f = np.subtract(np.multiply(m * g, np.sin(alpha_list)), np.multiply(m, acceleration))
     plt.plot(x, f, label="Numerisk")
-    plt.legend()
     plt.ylabel("friksjonskraft f [mN]")
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
     gca.set_xlim([0, 1.371])
-    plt.axvline(x=0.48, color='r', linestyle='dashed')
-    plt.axvline(x=1.016, color='r', linestyle='dashed')
+    plt.axvline(x=0.48, color='C9', linestyle='dashed')
+    plt.axvline(x=1.016, color='C9', linestyle='dashed')
+
+    plt.axvline(x=0.513, color="b", linestyle='dashed')
+    plt.axvline(x=1.069, color="b", linestyle='dashed')
+    plt.legend()
 
 
 def plotInterpolatedCurveWithExperimentalCurve():
@@ -232,18 +245,35 @@ def plotInterpolatedCurveWithExperimentalCurve():
     plt.ylabel("posisjon y [m]")
     plt.xlabel("posisjon x [m]")
     plt.legend()
+    plt.axvline(x=0.48, color='C9', linestyle='dashed')
+    plt.axvline(x=1.016, color='C9', linestyle='dashed')
+
+    plt.axvline(x = 0.513, color="b", linestyle='dashed')
+    plt.axvline(x=1.069, color="b", linestyle='dashed')
+
+
 
     diff = y - data['y']
     plt.subplot(212)
-    plt.plot(x, diff, label="Differanse")
+    plt.plot(x, abs(diff), label="Differanse")
     plt.ylabel("posisjon y [m]")
     plt.xlabel("posisjon x [m]")
-    plt.legend()
+    plt.axvline(x=0.48, color='C9', linestyle='dashed')
+    plt.axvline(x=1.016, color='C9', linestyle='dashed')
+
+    plt.axvline(x=0.513, color="b", linestyle='dashed')
+    plt.axvline(x=1.069, color="b", linestyle='dashed')
 
 
-plotNumericalPosition()
-plotExperimentalPosition()
+plt.legend()
 
-plotNumericalVelocity()
-plotExperimentalVelocity()
+
+plotInterpolatedCurveWithExperimentalCurve()
+
+
+#plotFandN()
+
+#plotNumericalAcceleration()
+#plotF()
+
 plt.show()
