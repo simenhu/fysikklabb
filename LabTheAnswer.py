@@ -62,7 +62,7 @@ g = 9.82  # Constant of gravitation
 c = 2 / 3
 start_x = 0.0  # The start position in x-axis
 end_x = 2.0  # The end position in x-axis
-num_points = 10000  # Number of points
+num_points = 1000  # Number of points
 h = data['t'].iloc[-1] / num_points  # Time step size
 
 # Find the coefficients of a polynomial of degree 15 from the (t, x, y) values.
@@ -93,7 +93,6 @@ for i in range(num_points):
     position_next = position_now + velocity_now * h  # h is the time derivative
     acceleration_next = ((g * np.sin(alpha)) / (1 + c))
     velocity_next = velocity_now + acceleration_next * h
-    time_next = time_now + h
     y_next = y_now - (position_next - position_now) * np.sin(alpha)
     x_next = x_now + (position_next - position_now) * np.cos(alpha)
 
@@ -162,6 +161,22 @@ def plotNumericalAcceleration():
     global gca
     plt.subplot(211)
     plt.plot(x, acceleration, label="Numerisk")
+    print(h)
+
+
+    """
+
+    errorValues = acceleration[::]
+    errorValues2 = acceleration[::]
+    for i in range(0, num_points):
+        errorValues[i] = errorValues[i] + h*i
+        errorValues2[i] = errorValues2[i] - h*i
+
+    plt.plot(x, errorValues, label="Upper bound", linestyle="dashed", color="gray")
+    plt.plot(x, errorValues2, label="Lower bound", linestyle="dashed", color="gray")
+
+    """
+
     plt.ylabel("akselerasjon a [m/s²]")
     plt.xlabel("posisjon x [m]")
     gca = plt.gca()
@@ -255,7 +270,8 @@ def plotInterpolatedCurveWithExperimentalCurve():
 
     diff = y - data['y']
     plt.subplot(212)
-    plt.plot(x, abs(diff), label="Differanse")
+    plt.plot(x, abs(diff), label="Absoluttverdi av differanse")
+    plt.legend()
     plt.ylabel("posisjon y [m]")
     plt.xlabel("posisjon x [m]")
     plt.axvline(x=0.48, color='C9', linestyle='dashed')
